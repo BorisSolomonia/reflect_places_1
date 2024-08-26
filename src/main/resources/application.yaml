@@ -12,7 +12,7 @@ spring:
   application:
     name: REFLECT_PLACES_1
   datasource:
-    url: ${DB_HOST:jdbc:postgresql://localhost:5432/postgres}
+    url: jdbc:postgresql://10.2.0.8:5432/postgres
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -25,7 +25,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 oauth:
   #  ეს არის სერვერის მისამართი სადაც არის ავტორიზაციის სერვერი
-  url: ${AUTH_SERVER:http://localhost:8080}
+  url: http://10.2.0.132:8080
   #  ეს არის ავტორიზაციის სერვერის მისამართი სადაც არის ტოკენის api
   token-url: ${oauth.url}/oauth2/token
   #  ეს არის ავტორიზაციის სერვერის მისამართი სადაც არის კლიენტის ინფორმაცია, ამით ხდება კლიენტის ვალიდაცია, ავტორიზაციის სერვერისთვის ამ შემთხვევაში კლიენტი არის ეს, აუთენთიფიკაციის სერვერი
