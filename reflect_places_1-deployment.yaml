@@ -24,6 +24,8 @@ spec:
               value: "prod"
             - name: DB_HOST
               value: jdbc:postgresql://10.2.0.8:5432/postgres
+            - name: AUTH_SERVER
+              value: http://10.2.0.132:8080  
 ---
 apiVersion: v1
 kind: Service
