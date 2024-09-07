@@ -16,6 +16,7 @@ public class CustomJwtDecoder implements JwtDecoder {
     @Override
     public Jwt decode(String token) throws JwtException {
         System.out.println("Attempting to decode JWT...");
+        System.out.println("JWT Token: " + token);
         try {
             Jwt jwt = delegate.decode(token);
             System.out.println("JWT validated successfully: " + jwt);
