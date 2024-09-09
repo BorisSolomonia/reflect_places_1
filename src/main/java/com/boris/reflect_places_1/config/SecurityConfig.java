@@ -28,34 +28,56 @@ import java.util.Map;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    // Define the security filter chain bean
+    // Define the security filter chain bean ჩამქვრალია 10/09/2024
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+//        httpSecurity
+//                // Disable CSRF protection for stateless sessions
+//                .csrf(AbstractHttpConfigurer::disable)
+//                // Configure URL authorization rules
+//                .authorizeHttpRequests(authorizeRequests ->
+//                        authorizeRequests
+//                                .requestMatchers("/api/places").authenticated() // Require authentication for /api/places
+//                                .anyRequest().permitAll() // Allow all other requests
+//                )
+//                // Set session management to stateless (no session will be created or used)
+//                .sessionManagement(sm ->
+//                        sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                )
+//                // Configure OAuth2 resource server to use custom authentication manager resolver
+//                .oauth2ResourceServer(oauth ->
+//                        oauth.authenticationManagerResolver(authManagerResolver())
+//                );
+//                // Configure CORS with custom source
+//                //.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+//
+//
+//        // Add a custom logging filter before the UsernamePasswordAuthenticationFilter
+//        httpSecurity.addFilterBefore(new LoggingFilter(), UsernamePasswordAuthenticationFilter.class);
+//
+//        // Return the configured SecurityFilterChain
+//        return httpSecurity.build();
+//    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                // Disable CSRF protection for stateless sessions
                 .csrf(AbstractHttpConfigurer::disable)
-                // Configure URL authorization rules
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/api/places").authenticated() // Require authentication for /api/places
-                                .anyRequest().permitAll() // Allow all other requests
+                                .requestMatchers("/api/places").authenticated()
+                                .anyRequest().permitAll()
                 )
-                // Set session management to stateless (no session will be created or used)
                 .sessionManagement(sm ->
                         sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                // Configure OAuth2 resource server to use custom authentication manager resolver
                 .oauth2ResourceServer(oauth ->
                         oauth.authenticationManagerResolver(authManagerResolver())
-                );
-                // Configure CORS with custom source
-                //.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+                )
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())); // Enable CORS
 
-
-        // Add a custom logging filter before the UsernamePasswordAuthenticationFilter
         httpSecurity.addFilterBefore(new LoggingFilter(), UsernamePasswordAuthenticationFilter.class);
 
-        // Return the configured SecurityFilterChain
         return httpSecurity.build();
     }
 
@@ -87,5 +109,18 @@ public class SecurityConfig {
         System.out.println("Created JwtAuthenticationProvider with custom JwtDecoder");
         // Return an AuthenticationManager with the JwtAuthenticationProvider
         return new ProviderManager(provider);
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("https://www.brooks-dusura.uk")); // Add allowed origins here
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE")); // Allowed HTTP methods
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type")); // Allowed headers
+        configuration.setAllowCredentials(true); // Allow credentials (if needed)
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
