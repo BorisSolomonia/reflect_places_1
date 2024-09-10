@@ -18,6 +18,7 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public List<PlaceEntity> getAllPlaces(Jwt jwt) {
         String username = jwt.getClaim("user-name"); // Extract the username from the JWT token
+        System.out.println(username);
         return placeRepository.findByUsername(username);
     }
 }

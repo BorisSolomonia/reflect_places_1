@@ -35,10 +35,10 @@ logging:
   level:
     org:
       springframework: info
-#    root: debug
-#    com:
-#      boris:
-#        reflect_places_1:
-#          config: debug
-#          security: debug
+    root: debug
+    com:
+      boris:
+        reflect_places_1:
+          config: debug
+          security: debug
 
