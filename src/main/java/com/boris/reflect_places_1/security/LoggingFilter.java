@@ -17,8 +17,10 @@ public class LoggingFilter extends HttpFilter implements Filter {
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         String authHeader = request.getHeader("Authorization");
+        String authHeader2 = request.getHeader("Bearer");
         System.out.println("Request URI: " + request.getRequestURI());
         System.out.println("Authorization Header: " + authHeader);
+        System.out.println("Authorization Header: " + authHeader2);
         chain.doFilter(request, response);
     }
 
