@@ -29,57 +29,57 @@ import java.util.Map;
 public class SecurityConfig {
 
     // Define the security filter chain bean ჩამქვრალია 10/09/2024
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-//        httpSecurity
-//                // Disable CSRF protection for stateless sessions
-//                .csrf(AbstractHttpConfigurer::disable)
-//                // Configure URL authorization rules
-//                .authorizeHttpRequests(authorizeRequests ->
-//                        authorizeRequests
-//                                .requestMatchers("/api/places").authenticated() // Require authentication for /api/places
-//                                .anyRequest().permitAll() // Allow all other requests
-//                )
-//                // Set session management to stateless (no session will be created or used)
-//                .sessionManagement(sm ->
-//                        sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                )
-//                // Configure OAuth2 resource server to use custom authentication manager resolver
-//                .oauth2ResourceServer(oauth ->
-//                        oauth.authenticationManagerResolver(authManagerResolver())
-//                );
-//                // Configure CORS with custom source
-//                //.cors(cors -> cors.configurationSource(corsConfigurationSource()));
-//
-//
-//        // Add a custom logging filter before the UsernamePasswordAuthenticationFilter
-//        httpSecurity.addFilterBefore(new LoggingFilter(), UsernamePasswordAuthenticationFilter.class);
-//
-//        // Return the configured SecurityFilterChain
-//        return httpSecurity.build();
-//    }
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
+                // Disable CSRF protection for stateless sessions
                 .csrf(AbstractHttpConfigurer::disable)
+                // Configure URL authorization rules
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/api/places").authenticated()
-                                .anyRequest().permitAll()
+                                .requestMatchers("/api/places").authenticated() // Require authentication for /api/places
+                                .anyRequest().permitAll() // Allow all other requests
                 )
+                // Set session management to stateless (no session will be created or used)
                 .sessionManagement(sm ->
                         sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
+                // Configure OAuth2 resource server to use custom authentication manager resolver
                 .oauth2ResourceServer(oauth ->
                         oauth.authenticationManagerResolver(authManagerResolver())
-                )
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())); // Enable CORS
+                );
+                // Configure CORS with custom source
+                //.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
+
+        // Add a custom logging filter before the UsernamePasswordAuthenticationFilter
         httpSecurity.addFilterBefore(new LoggingFilter(), UsernamePasswordAuthenticationFilter.class);
 
+        // Return the configured SecurityFilterChain
         return httpSecurity.build();
     }
+
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+//        httpSecurity
+//                .csrf(AbstractHttpConfigurer::disable)
+//                .authorizeHttpRequests(authorizeRequests ->
+//                        authorizeRequests
+//                                .requestMatchers("/api/places").authenticated()
+//                                .anyRequest().permitAll()
+//                )
+//                .sessionManagement(sm ->
+//                        sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                )
+//                .oauth2ResourceServer(oauth ->
+//                        oauth.authenticationManagerResolver(authManagerResolver())
+//                )
+//                .cors(cors -> cors.configurationSource(corsConfigurationSource())); // Enable CORS
+//
+//        httpSecurity.addFilterBefore(new LoggingFilter(), UsernamePasswordAuthenticationFilter.class);
+//
+//        return httpSecurity.build();
+//    }
 
     @Value("${AUTH_SERVER:http://localhost:8080}")
     private String authServerUrl;
