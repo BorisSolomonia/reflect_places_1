@@ -47,9 +47,9 @@ public class SecurityConfig {
                 // Configure OAuth2 resource server to use custom authentication manager resolver
                 .oauth2ResourceServer(oauth ->
                         oauth.authenticationManagerResolver(authManagerResolver())
-                );
+                )
                 // Configure CORS with custom source
-                //.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
 
         // Add a custom logging filter before the UsernamePasswordAuthenticationFilter
