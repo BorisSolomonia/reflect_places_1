@@ -18,6 +18,13 @@ spec:
           image: IMAGE_URL
           ports:
             - containerPort: 8081
+          resources:
+            requests:
+              cpu: "100m"          # Reduced CPU request
+              memory: "512Mi"      # Reduced Memory request
+            limits:
+              cpu: "200m"          # Adjusted CPU limit
+              memory: "512Mi"
           env:
 #            - name: EUREKA_SERVER_ADDRESS
 #              value: "http://reflect-service-registry:8761/eureka"
