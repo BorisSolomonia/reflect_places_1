@@ -24,6 +24,13 @@ spec:
               value: postgres
             - name: POSTGRES_PASSWORD
               value: postgres
+          resources:
+            requests:
+              memory: "64Mi"    # Request only 64Mi of memory to minimize usage
+              cpu: "50m"        # Request a very small CPU allocation (50m)
+            limits:
+              memory: "128Mi"   # Set an upper memory limit to prevent high usage
+              cpu: "100m"       # Set a small CPU limit to keep costs down
           volumeMounts:
             - name: postgres-storage
               mountPath: /var/lib/postgresql/data
@@ -46,7 +53,6 @@ spec:
       targetPort: 5432
 
 ---
-
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -56,5 +62,4 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
-
+      storage: 512Mi    # Reduce the storage to 512Mi to minimize space used (if suitable)
