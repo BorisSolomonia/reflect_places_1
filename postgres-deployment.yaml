@@ -24,6 +24,8 @@ spec:
               value: postgres
             - name: POSTGRES_PASSWORD
               value: postgres
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata  
           resources:
             requests:
               memory: "64Mi"    # Request only 64Mi of memory to minimize usage
@@ -33,7 +35,7 @@ spec:
               cpu: "100m"       # Set a small CPU limit to keep costs down
           volumeMounts:
             - name: postgres-storage
-              mountPath: /var/lib/postgresql/data
+              mountPath: /var/lib/postgresql/data/pgdata  # Update to use subdirectory
       volumes:
         - name: postgres-storage
           persistentVolumeClaim:
