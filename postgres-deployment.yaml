@@ -35,7 +35,7 @@ spec:
               cpu: "100m"       # Set a small CPU limit to keep costs down
           volumeMounts:
             - name: postgres-storage
-              mountPath: /var/lib/postgresql/data/pgdata  # Update to use subdirectory
+              mountPath: /var/lib/postgresql/data  # Update to use subdirectory
       volumes:
         - name: postgres-storage
           persistentVolumeClaim:
