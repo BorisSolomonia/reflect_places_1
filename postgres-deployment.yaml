@@ -12,6 +12,15 @@ spec:
       labels:
         app: postgres
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - gke-low-cost-cluster-default-pool-04626fef-h9xn
       containers:
         - name: postgres
           image: postgres:13
@@ -28,11 +37,11 @@ spec:
               value: /var/lib/postgresql/data/pgdata  
           resources:
             requests:
-              memory: "64Mi"    # Request only 64Mi of memory to minimize usage
-              cpu: "50m"        # Request a very small CPU allocation (50m)
+              memory: "128Mi"    # Request only 64Mi of memory to minimize usage
+              cpu: "20m"        # Request a very small CPU allocation (50m)
             limits:
               memory: "128Mi"   # Set an upper memory limit to prevent high usage
-              cpu: "100m"       # Set a small CPU limit to keep costs down
+              cpu: "20m"       # Set a small CPU limit to keep costs down
           volumeMounts:
             - name: postgres-storage
               mountPath: /var/lib/postgresql/data  # Update to use subdirectory
