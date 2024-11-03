@@ -73,4 +73,4 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 256Mi    # Reduce the storage to 512Mi to minimize space used (if suitable)
+      storage: 512Mi    # Reduce the storage to 512Mi to minimize space used (if suitable)
