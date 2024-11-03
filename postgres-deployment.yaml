@@ -20,7 +20,7 @@ spec:
               - key: kubernetes.io/hostname
                 operator: In
                 values:
-                - gke-low-cost-cluster-default-pool-04626fef-h9xn
+                - gke-low-cost-cluster-default-pool-04626fef-gvbc
       containers:
         - name: postgres
           image: postgres:13
