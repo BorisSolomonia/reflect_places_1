@@ -12,6 +12,15 @@ spec:
       labels:
         app: reflect-places-1
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - gke-low-cost-cluster-default-pool-04626fef-gvbc
       containers:
         - name: reflect-places-1
           # image: borissolomonia/reflect_places_1:latest #dockerhub ზე განთავსებული იმიჯია საჭირო
