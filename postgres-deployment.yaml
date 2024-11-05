@@ -16,11 +16,11 @@ spec:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
-            - matchExpressions:
-              - key: kubernetes.io/hostname
-                operator: In
-                values:
-                - gke-low-cost-cluster-default-pool-04626fef-gvbc
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - gke-low-cost-cluster-default-pool-04626fef-gvbc
       containers:
         - name: postgres
           image: postgres:13
@@ -37,14 +37,14 @@ spec:
               value: /var/lib/postgresql/data/pgdata  
           resources:
             requests:
-              memory: "128Mi"    # Request only 64Mi of memory to minimize usage
-              cpu: "20m"        # Request a very small CPU allocation (50m)
+              memory: "128Mi"
+              cpu: "20m"
             limits:
-              memory: "128Mi"   # Set an upper memory limit to prevent high usage
-              cpu: "20m"       # Set a small CPU limit to keep costs down
+              memory: "128Mi"
+              cpu: "20m"
           volumeMounts:
             - name: postgres-storage
-              mountPath: /var/lib/postgresql/data  # Update to use subdirectory
+              mountPath: /var/lib/postgresql/data
       volumes:
         - name: postgres-storage
           persistentVolumeClaim:
@@ -73,4 +73,4 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 512Mi    # Reduce the storage to 512Mi to minimize space used (if suitable)
+      storage: 128Mi  # Requested storage minimized to 128Mi
