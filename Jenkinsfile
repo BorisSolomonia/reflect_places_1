@@ -167,7 +167,7 @@ pipeline {
                         def wslKeyFilePath = GC_KEY_FILE.replace('\\', '/').replace('C:', '/mnt/c')
 
                         // Authenticate and deploy to GKE using WSL
-                        bat "wsl -d Ubuntu-22.04 gcloud auth activate-service-account --key-file=${wslKeyFilePath} --verbosity=debug"
+                        bat "wsl -d Ubuntu-22.04 gcloud auth activate-service-account --key-file=${wslKeyFilePath} --verbosity=info"
                         bat "wsl -d Ubuntu-22.04 gcloud container clusters get-credentials ${CLUSTER} --zone ${ZONE} --project ${PROJECT_ID}"
                         bat "wsl -d Ubuntu-22.04 kubectl apply -f reflect_places_1-deployment.yaml"
                     }
