@@ -118,7 +118,7 @@ pipeline {
         REPO_URL='us-central1-docker.pkg.dev/hidden-mind-441018-h1/brooks'
         PROJECT_ID = 'hidden-mind-441018-h1'
         ARTIFACT_REGISTRY = 'brooks'
-        IMAGE_NAME = 'auth-server'
+        IMAGE_NAME = 'reflect_places_1'
         CLUSTER = 'low-cost-cluster'
         ZONE = 'us-central1'
         JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64'  // Set JAVA_HOME for WSL
