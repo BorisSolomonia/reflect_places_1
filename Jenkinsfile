@@ -127,7 +127,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/BorisSolomonia/reflect_places_1.git', branch: 'master', credentialsId: "${GIT_CREDENTIALS_ID}"
+                git url: 'https://github.com/BorisSolomonia/reflect_places_1.git', branch: 'alter_1', credentialsId: "${GIT_CREDENTIALS_ID}"
             }
         }
         stage('Build and Push Image') {
