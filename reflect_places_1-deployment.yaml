@@ -22,7 +22,7 @@ spec:
       #           values:
       #           - gke-low-cost-cluster-default-pool-04626fef-gvbc
       containers:
-        - name: "reflect_places_1"
+        - name: 'reflect_places_1'
           # image: borissolomonia/reflect_places_1:latest #dockerhub ზე განთავსებული იმიჯია საჭირო
           image: IMAGE_URL
           ports:
