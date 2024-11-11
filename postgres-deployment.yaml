@@ -12,15 +12,15 @@ spec:
       labels:
         app: postgres
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: kubernetes.io/hostname
-                    operator: In
-                    values:
-                      - gke-low-cost-cluster-default-pool-04626fef-gvbc
+      # affinity:
+      #   nodeAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       nodeSelectorTerms:
+      #         - matchExpressions:
+      #             - key: kubernetes.io/hostname
+      #               operator: In
+      #               values:
+      #                 - gke-low-cost-cluster-default-pool-04626fef-gvbc
       containers:
         - name: postgres
           image: postgres:13
