@@ -1,0 +1,7 @@
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: brooks-managed-cert
+spec:
+  domains:
+    - www.brooks-dusura.uk
