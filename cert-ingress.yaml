@@ -17,6 +17,7 @@ spec:
                 name: brooks-app-service
                 port:
                   number: 80
+                  
   tls:
     - hosts:
         - www.brooks-dusura.uk
