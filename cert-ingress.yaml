@@ -3,8 +3,7 @@ kind: Ingress
 metadata:
   name: brooks-ingress
   annotations:
-    ingress.gcp.kubernetes.io/pre-shared-cert: mcrt-4c68d1bb-62e1-4830-a2ff-4aa8c8ae5ae3
-    networking.gke.io/managed-certificates: brooks-managed-cert
+    kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
     - host: www.brooks-dusura.uk
@@ -17,7 +16,6 @@ spec:
                 name: brooks-app-service
                 port:
                   number: 80
-                  
   tls:
     - hosts:
         - www.brooks-dusura.uk
