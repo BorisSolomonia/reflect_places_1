@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: brooks-ingress
 spec:
-  ingressClassName: nginx  # Use this instead of the deprecated annotation
+  ingressClassName: nginx  # Use this field to specify the ingress class
   rules:
     - host: www.brooks-dusura.uk
       http:
