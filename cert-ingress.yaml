@@ -2,9 +2,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: brooks-ingress
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
 spec:
+  ingressClassName: nginx  # Use this instead of the deprecated annotation
   rules:
     - host: www.brooks-dusura.uk
       http:
