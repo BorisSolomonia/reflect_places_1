@@ -29,11 +29,11 @@ spec:
             - containerPort: 8081
           resources:
             requests:
-              cpu: "20m"          # Reduced CPU request
-              memory: "128Mi"      # Reduced Memory request
+              cpu: "60m"          # Reduced CPU request
+              memory: "256Mi"      # Reduced Memory request
             limits:
               cpu: "100m"          # Adjusted CPU limit
-              memory: "128Mi"
+              memory: "256Mi"
           env:
 #            - name: EUREKA_SERVER_ADDRESS
 #              value: "http://reflect-service-registry:8761/eureka"
