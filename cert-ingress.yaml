@@ -46,8 +46,14 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: authentication-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://www.brooks-dusura.uk"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "Content-Type, Authorization, X-Requested-With"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
 spec:
-  ingressClassName: nginx  # Ensure this matches the class name for ingress-nginx
+  ingressClassName: nginx  # This links the Ingress to the ingress-nginx controller
   rules:
     - host: www.brooks-dusura.uk
       http:
@@ -59,3 +65,4 @@ spec:
                 name: authentication-server
                 port:
                   number: 8081
+
