@@ -19,17 +19,35 @@
 #    - hosts:
 #        - www.brooks-dusura.uk
 #      secretName: brooks-cert
+#apiVersion: networking.k8s.io/v1
+#kind: Ingress
+#metadata:
+#  name: authentication-ingress
+#  annotations:
+#    nginx.ingress.kubernetes.io/rewrite-target: /
+#    nginx.ingress.kubernetes.io/cors-allow-origin: "https://www.brooks-dusura.uk"
+#    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, OPTIONS"
+#    nginx.ingress.kubernetes.io/cors-allow-headers: "Content-Type, Authorization, X-Requested-With"
+#    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+#spec:
+#  rules:
+#    - host: www.brooks-dusura.uk
+#      http:
+#        paths:
+#          - path: /user-auth/
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: authentication-server
+#                port:
+#                  number: 8081
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: authentication-ingress
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-    nginx.ingress.kubernetes.io/cors-allow-origin: "https://www.brooks-dusura.uk"
-    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, OPTIONS"
-    nginx.ingress.kubernetes.io/cors-allow-headers: "Content-Type, Authorization, X-Requested-With"
-    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
 spec:
+  ingressClassName: nginx  # Ensure this matches the class name for ingress-nginx
   rules:
     - host: www.brooks-dusura.uk
       http:
