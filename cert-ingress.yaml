@@ -1,94 +1,37 @@
-#apiVersion: networking.k8s.io/v1
-#kind: Ingress
-#metadata:
-#  name: brooks-ingress
-#spec:
-#  ingressClassName: nginx  # Use this field to specify the ingress class
-#  rules:
-#    - host: www.brooks-dusura.uk
-#      http:
-#        paths:
-#          - path: /
-#            pathType: Prefix
-#            backend:
-#              service:
-#                name: brooks-app-service
-#                port:
-#                  number: 80
-#  tls:
-#    - hosts:
-#        - www.brooks-dusura.uk
-#      secretName: brooks-cert
-#apiVersion: networking.k8s.io/v1
-#kind: Ingress
-#metadata:
-#  name: authentication-ingress
-#  annotations:
-#    nginx.ingress.kubernetes.io/rewrite-target: /
-#    nginx.ingress.kubernetes.io/cors-allow-origin: "https://www.brooks-dusura.uk"
-#    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, OPTIONS"
-#    nginx.ingress.kubernetes.io/cors-allow-headers: "Content-Type, Authorization, X-Requested-With"
-#    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
-#spec:
-#  rules:
-#    - host: www.brooks-dusura.uk
-#      http:
-#        paths:
-#          - path: /user-auth/
-#            pathType: Prefix
-#            backend:
-#              service:
-#                name: authentication-server
-#                port:
-#                  number: 8081
-
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: app-ingress
-  namespace: default
+  name: authentication-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
-    nginx.ingress.kubernetes.io/proxy-body-size: 50m
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: https://www.brooks-dusura.uk
+    nginx.ingress.kubernetes.io/cors-allow-methods: GET, POST, OPTIONS
+    nginx.ingress.kubernetes.io/cors-allow-headers: Content-Type, Authorization, X-Requested-With
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
 spec:
   ingressClassName: nginx
   rules:
     - host: www.brooks-dusura.uk
       http:
         paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: brooks-app-service
-                port:
-                  number: 80
-    - host: api.brooks-dusura.uk
-      http:
-        paths:
-          - path: /user-auth
+          - path: /user-auth/
             pathType: Prefix
             backend:
               service:
                 name: authentication-server
                 port:
                   number: 8081
-          - path: /oauth2
-            pathType: Prefix
-            backend:
-              service:
-                name: auth-server
-                port:
-                  number: 8080
-    - host: places.brooks-dusura.uk
-      http:
-        paths:
-          - path: /
+          - path: /api/places/
             pathType: Prefix
             backend:
               service:
                 name: reflect-places-1
                 port:
                   number: 8081
-
+          - path: /auth/
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-server
+                port:
+                  number: 8080
