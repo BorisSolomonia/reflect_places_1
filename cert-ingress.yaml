@@ -3,9 +3,13 @@ kind: Ingress
 metadata:
   name: authentication-ingress
   annotations:
-    nginx.ingress.kubernetes.io/cors-allow-origin: https://www.brooks-dusura.uk
-    nginx.ingress.kubernetes.io/cors-allow-methods: GET, POST, OPTIONS
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://www.brooks-dusura.uk"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, OPTIONS"
     nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "Content-Type, Authorization, X-Requested-With"
+    nginx.ingress.kubernetes.io/cors-expose-headers: "Authorization"
 spec:
   ingressClassName: nginx
   rules:
@@ -19,22 +23,22 @@ spec:
                 name: brooks-app-service
                 port:
                   number: 80
-          - path: /user-auth/
-            pathType: Prefix
+          - path: /user-auth(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: authentication-server
                 port:
                   number: 8081
-          - path: /api/places/
-            pathType: Prefix
+          - path: /api/places(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: reflect-places-1
                 port:
                   number: 8081
-          - path: /auth/
-            pathType: Prefix
+          - path: /auth(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: auth-server
