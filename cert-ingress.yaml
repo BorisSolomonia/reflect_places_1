@@ -41,3 +41,8 @@ spec:
                 name: auth-server
                 port:
                   number: 8080
+  defaultBackend:
+    service:
+      name: brooks-app-service
+      port:
+        number: 80
