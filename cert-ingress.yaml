@@ -6,7 +6,6 @@ metadata:
     nginx.ingress.kubernetes.io/cors-allow-origin: https://www.brooks-dusura.uk
     nginx.ingress.kubernetes.io/cors-allow-methods: GET, POST, OPTIONS
     nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
-    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   ingressClassName: nginx
   rules:
