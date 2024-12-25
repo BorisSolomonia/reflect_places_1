@@ -1,51 +1,92 @@
+#apiVersion: networking.k8s.io/v1
+#kind: Ingress
+#metadata:
+#  name: authentication-ingress
+#  annotations:
+#    nginx.ingress.kubernetes.io/rewrite-target: /$2
+#    nginx.ingress.kubernetes.io/use-regex: "true"
+#    nginx.ingress.kubernetes.io/cors-allow-origin: "https://www.brooks-dusura.uk"
+#    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, OPTIONS"
+#    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+#    nginx.ingress.kubernetes.io/cors-allow-headers: "Content-Type, Authorization, X-Requested-With"
+#    nginx.ingress.kubernetes.io/cors-expose-headers: "Authorization"
+#spec:
+#  ingressClassName: nginx
+#  rules:
+#    - host: www.brooks-dusura.uk
+#      http:
+#        paths:
+#          - path: /
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: brooks-app-service
+#                port:
+#                  number: 80
+#          - path: /user-auth(/|$)(.*)
+#            pathType: ImplementationSpecific
+#            backend:
+#              service:
+#                name: authentication-server
+#                port:
+#                  number: 8081
+#          - path: /api/places(/|$)(.*)
+#            pathType: ImplementationSpecific
+#            backend:
+#              service:
+#                name: reflect-places-1
+#                port:
+#                  number: 8081
+#          - path: /auth(/|$)(.*)
+#            pathType: ImplementationSpecific
+#            backend:
+#              service:
+#                name: auth-server
+#                port:
+#                  number: 8080
+#  defaultBackend:
+#    service:
+#      name: brooks-app-service
+#      port:
+#        number: 80
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: authentication-ingress
+  name: brooks-ingress
+  namespace: default
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/cors-allow-origin: "https://www.brooks-dusura.uk"
-    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, OPTIONS"
-    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
-    nginx.ingress.kubernetes.io/cors-allow-headers: "Content-Type, Authorization, X-Requested-With"
-    nginx.ingress.kubernetes.io/cors-expose-headers: "Authorization"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   ingressClassName: nginx
   rules:
     - host: www.brooks-dusura.uk
       http:
         paths:
-          - path: /
+          - path: /auth
             pathType: Prefix
-            backend:
-              service:
-                name: brooks-app-service
-                port:
-                  number: 80
-          - path: /user-auth(/|$)(.*)
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: authentication-server
-                port:
-                  number: 8081
-          - path: /api/places(/|$)(.*)
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: reflect-places-1
-                port:
-                  number: 8081
-          - path: /auth(/|$)(.*)
-            pathType: ImplementationSpecific
             backend:
               service:
                 name: auth-server
                 port:
                   number: 8080
-  defaultBackend:
-    service:
-      name: brooks-app-service
-      port:
-        number: 80
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: authentication-server
+                port:
+                  number: 8081
+          - path: /places
+            pathType: Prefix
+            backend:
+              service:
+                name: reflect-places-1
+                port:
+                  number: 8081
+  tls:
+    - hosts:
+        - www.brooks-dusura.uk
+      secretName: brooks-tls
+
