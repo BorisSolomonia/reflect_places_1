@@ -15,7 +15,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: www.brooks-dusura.uk
+    - host: www.brooooooooooooks-dusura.uk
       http:
         paths:
           - path: /auth
