@@ -4,70 +4,72 @@ metadata:
   name: brooks-ingress
   namespace: default
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    # CORS configurations
+    # Let’s remove rewrite-target since we’re using 'pathType: Prefix'
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, OPTIONS"
     nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization"
     nginx.ingress.kubernetes.io/cors-allow-origin: "https://www.brooks-dusura.uk"
-    # Ensure method preservation
-    nginx.ingress.kubernetes.io/proxy-method: "PATCH $request_method"
-    # SSL configurations
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    # Prevent redirect loops
-    nginx.ingress.kubernetes.io/proxy-redirect-from: "off"
-    nginx.ingress.kubernetes.io/proxy-redirect-to: "off"
+    # If you need custom method or other settings, keep them here
 spec:
   ingressClassName: nginx
+
   rules:
+    # If you actually need api.brooks-dusura.uk for something, keep it
     - host: api.brooks-dusura.uk
       http:
         paths:
-          - path: /user-auth(/|$)(.*)
-            pathType: ImplementationSpecific
+          - path: /user-auth
+            pathType: Prefix
             backend:
               service:
                 name: authentication-server
                 port:
                   number: 8081
+
     - host: www.brooks-dusura.uk
       http:
         paths:
-          - path: /auth(/|$)(.*)
-            pathType: ImplementationSpecific
+          # 1) Route to your Auth Server
+          - path: /auth
+            pathType: Prefix
             backend:
               service:
                 name: auth-server
                 port:
                   number: 8080
-          - path: /user-auth(/|$)(.*)
-            pathType: ImplementationSpecific
+          # 2) Authentication Server
+          - path: /user-auth
+            pathType: Prefix
             backend:
               service:
                 name: authentication-server
                 port:
                   number: 8081
-          - path: /places(/|$)(.*)
-            pathType: ImplementationSpecific
+          # 3) Places Service
+          - path: /places
+            pathType: Prefix
             backend:
               service:
                 name: reflect-places-1
                 port:
                   number: 8081
-          - path: /(.*)
-            pathType: ImplementationSpecific
+          # 4) React App “catch-all”
+          - path: /
+            pathType: Prefix
             backend:
               service:
                 name: brooks-app-service
                 port:
                   number: 80
+
   tls:
     - hosts:
         - www.brooks-dusura.uk
         - api.brooks-dusura.uk
       secretName: brooks-tls
+
 
 #apiVersion: networking.k8s.io/v1
 #kind: Ingress
