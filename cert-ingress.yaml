@@ -1,85 +1,30 @@
-#apiVersion: networking.k8s.io/v1
-#kind: Ingress
-#metadata:
-#  name: brooks-ingress
-#  namespace: default
-#  annotations:
-#    nginx.ingress.kubernetes.io/enable-cors: "true"
-#    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, OPTIONS"
-#    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization"
-#    nginx.ingress.kubernetes.io/cors-allow-origin: "https://www.brooks-dusura.uk"
-#    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-#    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-#spec:
-#  ingressClassName: nginx
-#  rules:
-#    - host: api.brooks-dusura.uk
-#      http:
-#        paths:
-#          # The separate 'api' domain for your authentication-server, if you want it.
-#          - path: /user-auth
-#            pathType: Prefix
-#            backend:
-#              service:
-#                name: authentication-server
-#                port:
-#                  number: 8081
-#
-#    - host: www.brooks-dusura.uk
-#      http:
-#        paths:
-#          - path: /auth
-#            pathType: Prefix
-#            backend:
-#              service:
-#                name: auth-server
-#                port:
-#                  number: 8080
-#
-#          - path: /user-auth
-#            pathType: Prefix
-#            backend:
-#              service:
-#                name: authentication-server
-#                port:
-#                  number: 8081
-#
-#          - path: /places
-#            pathType: Prefix
-#            backend:
-#              service:
-#                name: reflect-places-1
-#                port:
-#                  number: 8081
-#
-#          # "Catch-all" rule for your React app (brooks-app-service).
-#          # This should serve index.html for all unrecognized paths,
-#          # along with static files in /static/js etc.
-#          - path: /
-#            pathType: Prefix
-#            backend:
-#              service:
-#                name: brooks-app-service
-#                port:
-#                  number: 80
-#
-#  tls:
-#    - hosts:
-#        - api.brooks-dusura.uk
-#        - www.brooks-dusura.uk
-#      secretName: brooks-tls
-
-
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: brooks-ingress
   namespace: default
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://www.brooks-dusura.uk"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
   ingressClassName: nginx
   rules:
+    - host: api.brooks-dusura.uk
+      http:
+        paths:
+          # The separate 'api' domain for your authentication-server, if you want it.
+          - path: /user-auth
+            pathType: Prefix
+            backend:
+              service:
+                name: authentication-server
+                port:
+                  number: 8081
+
     - host: www.brooks-dusura.uk
       http:
         paths:
@@ -90,6 +35,7 @@ spec:
                 name: auth-server
                 port:
                   number: 8080
+
           - path: /user-auth
             pathType: Prefix
             backend:
@@ -97,6 +43,7 @@ spec:
                 name: authentication-server
                 port:
                   number: 8081
+
           - path: /places
             pathType: Prefix
             backend:
@@ -104,6 +51,10 @@ spec:
                 name: reflect-places-1
                 port:
                   number: 8081
+
+          # "Catch-all" rule for your React app (brooks-app-service).
+          # This should serve index.html for all unrecognized paths,
+          # along with static files in /static/js etc.
           - path: /
             pathType: Prefix
             backend:
@@ -111,7 +62,56 @@ spec:
                 name: brooks-app-service
                 port:
                   number: 80
+
   tls:
     - hosts:
+        - api.brooks-dusura.uk
         - www.brooks-dusura.uk
       secretName: brooks-tls
+
+
+#apiVersion: networking.k8s.io/v1
+#kind: Ingress
+#metadata:
+#  name: brooks-ingress
+#  namespace: default
+#  annotations:
+#    nginx.ingress.kubernetes.io/rewrite-target: /
+#spec:
+#  ingressClassName: nginx
+#  rules:
+#    - host: www.brooks-dusura.uk
+#      http:
+#        paths:
+#          - path: /auth
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: auth-server
+#                port:
+#                  number: 8080
+#          - path: /user-auth
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: authentication-server
+#                port:
+#                  number: 8081
+#          - path: /places
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: reflect-places-1
+#                port:
+#                  number: 8081
+#          - path: /
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: brooks-app-service
+#                port:
+#                  number: 80
+#  tls:
+#    - hosts:
+#        - www.brooks-dusura.uk
+#      secretName: brooks-tls
