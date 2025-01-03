@@ -22,6 +22,16 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
+    - host: api.brooks-dusura.uk
+      http:
+        paths:
+          - path: /user-auth(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: authentication-server
+                port:
+                  number: 8081
     - host: www.brooks-dusura.uk
       http:
         paths:
@@ -56,6 +66,7 @@ spec:
   tls:
     - hosts:
         - www.brooks-dusura.uk
+        - api.brooks-dusura.uk
       secretName: brooks-tls
 
 #apiVersion: networking.k8s.io/v1
