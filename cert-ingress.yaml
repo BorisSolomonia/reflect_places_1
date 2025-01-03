@@ -16,7 +16,7 @@ spec:
     - host: www.brooks-dusura.uk
       http:
         paths:
-          - path: /auth
+          - path: /oauth2
             pathType: Prefix
             backend:
               service:
