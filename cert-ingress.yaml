@@ -4,36 +4,50 @@ metadata:
   name: brooks-ingress
   namespace: default
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    # CORS configurations
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://www.brooks-dusura.uk"
+    # Ensure method preservation
+    nginx.ingress.kubernetes.io/proxy-method: "PATCH $request_method"
+    # SSL configurations
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    # Prevent redirect loops
+    nginx.ingress.kubernetes.io/proxy-redirect-from: "off"
+    nginx.ingress.kubernetes.io/proxy-redirect-to: "off"
 spec:
   ingressClassName: nginx
   rules:
     - host: www.brooks-dusura.uk
       http:
         paths:
-          - path: /auth
-            pathType: Prefix
+          - path: /auth(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: auth-server
                 port:
                   number: 8080
-          - path: /user-auth
-            pathType: Prefix
+          - path: /user-auth(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: authentication-server
                 port:
                   number: 8081
-          - path: /places
-            pathType: Prefix
+          - path: /places(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: reflect-places-1
                 port:
                   number: 8081
-          - path: /
-            pathType: Prefix
+          - path: /(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: brooks-app-service
@@ -43,3 +57,49 @@ spec:
     - hosts:
         - www.brooks-dusura.uk
       secretName: brooks-tls
+
+#apiVersion: networking.k8s.io/v1
+#kind: Ingress
+#metadata:
+#  name: brooks-ingress
+#  namespace: default
+#  annotations:
+#    nginx.ingress.kubernetes.io/rewrite-target: /
+#spec:
+#  ingressClassName: nginx
+#  rules:
+#    - host: www.brooks-dusura.uk
+#      http:
+#        paths:
+#          - path: /auth
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: auth-server
+#                port:
+#                  number: 8080
+#          - path: /user-auth
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: authentication-server
+#                port:
+#                  number: 8081
+#          - path: /places
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: reflect-places-1
+#                port:
+#                  number: 8081
+#          - path: /
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: brooks-app-service
+#                port:
+#                  number: 80
+#  tls:
+#    - hosts:
+#        - www.brooks-dusura.uk
+#      secretName: brooks-tls
