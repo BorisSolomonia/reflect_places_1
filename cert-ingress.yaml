@@ -13,18 +13,6 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: api.brooks-dusura.uk
-      http:
-        paths:
-          # The separate 'api' domain for your authentication-server, if you want it.
-          - path: /user-auth
-            pathType: Prefix
-            backend:
-              service:
-                name: authentication-server
-                port:
-                  number: 8081
-
     - host: www.brooks-dusura.uk
       http:
         paths:
@@ -35,7 +23,13 @@ spec:
                 name: auth-server
                 port:
                   number: 8080
-
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: reflect-places-1
+                port:
+                  number: 8081
           - path: /user-auth
             pathType: Prefix
             backend:
@@ -43,15 +37,6 @@ spec:
                 name: authentication-server
                 port:
                   number: 8081
-
-          - path: /places
-            pathType: Prefix
-            backend:
-              service:
-                name: reflect-places-1
-                port:
-                  number: 8081
-
           # "Catch-all" rule for your React app (brooks-app-service).
           # This should serve index.html for all unrecognized paths,
           # along with static files in /static/js etc.
@@ -65,7 +50,6 @@ spec:
 
   tls:
     - hosts:
-        - api.brooks-dusura.uk
         - www.brooks-dusura.uk
       secretName: brooks-tls
 
