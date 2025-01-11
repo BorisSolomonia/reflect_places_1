@@ -1,4 +1,4 @@
-apiVersion: apps/v1
+# apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
@@ -12,15 +12,6 @@ spec:
       labels:
         app: postgres
     spec:
-      # affinity:
-      #   nodeAffinity:
-      #     requiredDuringSchedulingIgnoredDuringExecution:
-      #       nodeSelectorTerms:
-      #         - matchExpressions:
-      #             - key: kubernetes.io/hostname
-      #               operator: In
-      #               values:
-      #                 - gke-low-cost-cluster-default-pool-04626fef-gvbc
       containers:
         - name: postgres
           image: postgres:13
@@ -34,14 +25,14 @@ spec:
             - name: POSTGRES_PASSWORD
               value: postgres
             - name: PGDATA
-              value: /var/lib/postgresql/data/pgdata  
+              value: /var/lib/postgresql/data/pgdata
           resources:
             requests:
-              memory: "128Mi"
-              cpu: "20m"
+              memory: "512Mi" # Increased memory request
+              cpu: "100m"     # Increased CPU request
             limits:
-              memory: "128Mi"
-              cpu: "20m"
+              memory: "512Mi"   # Increased memory limit
+              cpu: "100m"     # Increased CPU limit
           volumeMounts:
             - name: postgres-storage
               mountPath: /var/lib/postgresql/data
@@ -56,7 +47,7 @@ kind: Service
 metadata:
   name: postgres
 spec:
-  type: LoadBalancer    
+  type: ClusterIP  # Changed to ClusterIP for internal use
   selector:
     app: postgres
   ports:
@@ -73,4 +64,4 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 128Mi  # Requested storage minimized to 128Mi
+      storage: 1Gi  # Increased storage for the database
