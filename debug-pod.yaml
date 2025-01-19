@@ -6,12 +6,11 @@ spec:
   containers:
     - name: debug-container
       image: ubuntu
-      command: ["/bin/bash", "-c", "sleep infinity"]
+      command: ["sleep", "infinity"]
       volumeMounts:
-        - mountPath: /mnt/postgres
-          name: postgres-storage
+        - name: postgres-storage
+          mountPath: /mnt/postgres
   volumes:
     - name: postgres-storage
       persistentVolumeClaim:
         claimName: postgres-pvc
-  restartPolicy: Never
