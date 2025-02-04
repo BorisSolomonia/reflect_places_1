@@ -47,6 +47,13 @@ spec:
                 name: brooks-app-service
                 port:
                   number: 80
+          - path: /profile
+            pathType: Prefix
+            backend:
+              service:
+                name: brooks-app-service
+                port:
+                  number: 80        
 
   tls:
     - hosts:
