@@ -10,4 +10,7 @@ import java.util.List;
 public interface PlaceService {
 
     public List<PlaceEntity> getAllPlaces(@AuthenticationPrincipal Jwt jwt);
+
+    public PlaceEntity save(PlaceEntity place);
+    public List<PlaceEntity> findByUsername(Jwt jwt);
 }

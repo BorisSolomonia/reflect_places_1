@@ -1,5 +1,6 @@
 package com.boris.reflect_places_1.repo;
 
+import com.boris.reflect_places_1.entity.Place;
 import com.boris.reflect_places_1.entity.PlaceEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 

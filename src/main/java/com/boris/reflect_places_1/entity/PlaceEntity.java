@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -14,8 +16,11 @@ public class PlaceEntity implements Place{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private double lat;
-    private double lng;
+    private Double latitude;
+    private Double longitude;
+    private String description;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
     @Column(name = "user_name")
     private String username;
 
@@ -23,8 +28,8 @@ public class PlaceEntity implements Place{
 
     public PlaceEntity(String name, double lat, double lng, String username) {
         this.name = name;
-        this.lat = lat;
-        this.lng = lng;
+        this.latitude = lat;
+        this.longitude = lng;
         this.username = username;
     }
 }

@@ -8,6 +8,8 @@ server:
 #    register-with-eureka: true
 #    service-url:
 #      defaultZone: ${EUREKA_SERVER_ADDRESS:http://localhost:8761/eureka}
+auth0:
+    audience: https://www.brooks-dusura.uk/api
 spring:
   application:
     name: REFLECT_PLACES_1
@@ -23,14 +25,19 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-oauth:
-  #  ეს არის სერვერის მისამართი სადაც არის ავტორიზაციის სერვერი
-  url: http://34.67.92.189:8080
-  #  ეს არის ავტორიზაციის სერვერის მისამართი სადაც არის ტოკენის api
-  token-url: ${oauth.url}/oauth2/token
-  #  ეს არის ავტორიზაციის სერვერის მისამართი სადაც არის კლიენტის ინფორმაცია, ამით ხდება კლიენტის ვალიდაცია, ავტორიზაციის სერვერისთვის ამ შემთხვევაში კლიენტი არის ეს, აუთენთიფიკაციის სერვერი
-  api-client-id: api-client-id
-  api-client-secret: api123
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://dev-4zduxht0r6gq1f7f.us.auth0.com/
+#oauth:
+#  #  ეს არის სერვერის მისამართი სადაც არის ავტორიზაციის სერვერი
+#  url: http://34.67.92.189:8080
+#  #  ეს არის ავტორიზაციის სერვერის მისამართი სადაც არის ტოკენის api
+#  token-url: ${oauth.url}/oauth2/token
+#  #  ეს არის ავტორიზაციის სერვერის მისამართი სადაც არის კლიენტის ინფორმაცია, ამით ხდება კლიენტის ვალიდაცია, ავტორიზაციის სერვერისთვის ამ შემთხვევაში კლიენტი არის ეს, აუთენთიფიკაციის სერვერი
+#  api-client-id: api-client-id
+#  api-client-secret: api123
 logging:
   level:
     org:
