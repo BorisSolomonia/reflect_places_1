@@ -115,8 +115,8 @@ pipeline {
         GIT_CREDENTIALS_ID = 'git'  // Changed to the correct Git credentials ID
         GC_KEY = 'gcp'  // Changed to the correct Google Cloud credentials ID
         REGISTRY_URI = 'us-central1-docker.pkg.dev'
-        REPO_URL='us-central1-docker.pkg.dev/hidden-mind-441018-h1/brooks'
-        PROJECT_ID = 'hidden-mind-441018-h1'
+        REPO_URL='us-central1-docker.pkg.dev/sound-catalyst-450217-q5/brooks'
+        PROJECT_ID = 'sound-catalyst-450217-q5'
         ARTIFACT_REGISTRY = 'brooks'
         IMAGE_NAME = 'reflect_places_1'
         CLUSTER = 'low-cost-cluster'
