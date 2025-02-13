@@ -1,0 +1,30 @@
+package com.boris.reflect_places_1.config;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+
+public class TokenLoggingFilter extends OncePerRequestFilter {
+    private static final Logger logger = LoggerFactory.getLogger(TokenLoggingFilter.class);
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
+        // Get the Authorization header
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            // Log the token (or just a part for debugging)
+            logger.debug("Received JWT Token: {}", token);
+        }
+        // Continue with the filter chain
+        filterChain.doFilter(request, response);
+    }
+}
