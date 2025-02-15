@@ -16,25 +16,11 @@ spec:
     - host: www.brooks-dusura.uk
       http:
         paths:
-          - path: /oauth2
-            pathType: Prefix
-            backend:
-              service:
-                name: auth-server
-                port:
-                  number: 8080
           - path: /api
             pathType: Prefix
             backend:
               service:
                 name: reflect-places-1
-                port:
-                  number: 8081
-          - path: /user-auth
-            pathType: Prefix
-            backend:
-              service:
-                name: authentication-server
                 port:
                   number: 8081
           # "Catch-all" rule for your React app (brooks-app-service).
@@ -54,7 +40,6 @@ spec:
                 name: brooks-app-service
                 port:
                   number: 80        
-
   tls:
     - hosts:
         - www.brooks-dusura.uk
