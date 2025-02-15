@@ -47,7 +47,7 @@ logging:
     com:
       boris:
         reflect_places_1:
-          config: info
+          config: debug
           security: debug
 #sentry:
 #  dsn: https://923dda76e8472586004bb263ac25ed10@o4508790625402880.ingest.de.sentry.io/4508790628221008
