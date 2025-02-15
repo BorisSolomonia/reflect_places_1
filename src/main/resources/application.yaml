@@ -47,5 +47,5 @@ logging:
       boris:
         reflect_places_1:
           config: info
-          security: info
+          security: debug
 

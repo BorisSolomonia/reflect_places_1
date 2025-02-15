@@ -17,14 +17,11 @@ public class TokenLoggingFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        // Get the Authorization header
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
-            // Log the token (or just a part for debugging)
-            logger.debug("Received JWT Token: {}", token);
+            logger.debug("Received JWT Token (first 20 chars): {}", token.substring(0, Math.min(20, token.length())));
         }
-        // Continue with the filter chain
         filterChain.doFilter(request, response);
     }
 }
