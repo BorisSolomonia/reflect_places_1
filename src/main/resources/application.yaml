@@ -42,6 +42,7 @@ logging:
   level:
     org:
       springframework: info
+      security: debug
     root: info
     com:
       boris:
