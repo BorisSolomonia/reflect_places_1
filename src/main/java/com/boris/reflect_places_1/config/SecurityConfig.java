@@ -27,6 +27,10 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        System.out.println("SecurityConfig Boris");
+        System.out.println("audience: " + audience);
+        System.out.println("issuer: " + issuer);
+        
         http
                 .cors()
                 .and()
