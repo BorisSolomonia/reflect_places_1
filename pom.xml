@@ -57,6 +57,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+  			<groupId>io.sentry</groupId>
+  			<artifactId>sentry-spring-boot-starter</artifactId>
+  			<version>LATEST_VERSION</version>
+		</dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
