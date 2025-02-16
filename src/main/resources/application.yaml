@@ -1,13 +1,5 @@
 server:
   port: 8081
-#eureka:
-#  instance:
-#    prefer-ip-address: true
-#  client:
-#    fetch-registry: true
-#    register-with-eureka: true
-#    service-url:
-#      defaultZone: ${EUREKA_SERVER_ADDRESS:http://localhost:8761/eureka}
 auth0:
     audience: https://www.brooks-dusura.uk/api
 spring:
@@ -31,15 +23,6 @@ spring:
         jwt:
           issuer-uri: https://dev-4zduxht0r6gq1f7f.us.auth0.com/
   # ეს არის ავტორიზაციის სერვერის მისამართი სადაც არის კლიენტის ინფორმაცია, ამით ხდება კლიენტის ვალიდაცია, ავტორიზაციის სერვერისთვის ამ შემთხვევაში კლიენ
-
-#oauth:
-#  #  ეს არის სერვერის მისამართი სადაც არის ავტორიზაციის სერვერი
-#  url: http://34.67.92.189:8080
-#  #  ეს არის ავტორიზაციის სერვერის მისამართი სადაც არის ტოკენის api
-#  token-url: ${oauth.url}/oauth2/token
-#  #  ეს არის ავტორიზაციის სერვერის მისამართი სადაც არის კლიენტის ინფორმაცია, ამით ხდება კლიენტის ვალიდაცია, ავტორიზაციის სერვერისთვის ამ შემთხვევაში კლიენტი არის ეს, აუთენთიფიკაციის სერვერი
-#  api-client-id: api-client-id
-#  api-client-secret: api123
 logging:
   level:
     org:
@@ -51,9 +34,3 @@ logging:
         reflect_places_1:
           config: debug
           security: debug
-#sentry:
-#  dsn: https://923dda76e8472586004bb263ac25ed10@o4508790625402880.ingest.de.sentry.io/4508790628221008
-#  traces-sample-rate: 1.0
-#  integrations:
-#      - io.sentry.spring.SentryExceptionResolverIntegration
-#      - io.sentry.spring.SentryTracingFilterIntegration
