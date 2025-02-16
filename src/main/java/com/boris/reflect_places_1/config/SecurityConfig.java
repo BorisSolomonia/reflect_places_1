@@ -5,8 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
@@ -28,16 +26,12 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        System.out.println("SecurityConfig Boris");
-        System.out.println("audience: " + audience);
-        System.out.println("issuer: " + issuer);
-
         http
                 .cors()
                 .and()
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/places").hasAuthority("SCOPE_write:places")  // 🔥 Restrict access to correct scope
+                .requestMatchers("/api/places").hasAuthority("SCOPE_write:places")  // 🔥 FIX: Require correct scope
                 .anyRequest().authenticated()
                 .and()
                 .oauth2ResourceServer()
@@ -48,14 +42,9 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtDecoder jwtDecoder() {
-        return JwtDecoders.fromIssuerLocation(issuer);
-    }
-
-    @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        grantedAuthoritiesConverter.setAuthorityPrefix("SCOPE_");  // 🔥 Auth0 scopes should be prefixed with SCOPE_
+        grantedAuthoritiesConverter.setAuthorityPrefix("SCOPE_");  // 🔥 Ensure scopes are prefixed correctly
         grantedAuthoritiesConverter.setAuthoritiesClaimName("scope");
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
@@ -67,7 +56,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("https://www.brooks-dusura.uk")); // 🔥 Fix frontend URL
+        config.setAllowedOrigins(Arrays.asList("https://www.brooks-dusura.uk"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
 
@@ -76,6 +65,7 @@ public class SecurityConfig {
         return source;
     }
 }
+
 
 
 //package com.boris.reflect_places_1.config;
