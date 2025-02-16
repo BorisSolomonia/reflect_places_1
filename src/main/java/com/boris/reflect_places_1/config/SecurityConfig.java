@@ -30,6 +30,7 @@ public class SecurityConfig {
                 .cors()
                 .and()
                 .csrf().disable()
+                .addFilterBefore(new TokenLoggingFilter(), org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests()
                 .requestMatchers("/api/places").hasAuthority("SCOPE_write:places")  // 🔥 FIX: Require correct scope
                 .anyRequest().authenticated()

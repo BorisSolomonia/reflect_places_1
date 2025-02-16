@@ -23,25 +23,21 @@ public class TokenLoggingFilter extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
-
             try {
                 SignedJWT signedJWT = SignedJWT.parse(token);
-
-                logger.info("🔑 Received JWT Token: {}", token.substring(0, Math.min(50, token.length())) + "...");
-                logger.info("🔍 Token Issuer: {}", signedJWT.getJWTClaimsSet().getIssuer());
-                logger.info("🔍 Token Audience: {}", signedJWT.getJWTClaimsSet().getAudience());
-                logger.info("🔍 Token Scope: {}", signedJWT.getJWTClaimsSet().getStringClaim("scope"));
-
+                logger.info("🔑 Received JWT Token (first 50 chars): {}", token.substring(0, Math.min(50, token.length())) + "...");
+                logger.info("🔍 Token Payload: {}", signedJWT.getJWTClaimsSet().toJSONObject());
             } catch (ParseException e) {
                 logger.error("🚨 Failed to parse JWT", e);
             }
         } else {
             logger.warn("🚨 No Authorization header found!");
         }
-
         filterChain.doFilter(request, response);
     }
 }
+
+
 
 
 
