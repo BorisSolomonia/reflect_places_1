@@ -26,7 +26,7 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public PlaceEntity save(PlaceEntity place) {
-        return null;
+        return placeRepository.save(place);
     }
 
     @Override

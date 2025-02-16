@@ -25,6 +25,9 @@ public class SecurityConfig {
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private String issuer;
 
+    //kmpoYNCF5SmOh7bMkO0xYkCBTlO25sNu
+    //5yvJg7M1DRDtbL51OSYg1MraygSEfyQYCDqe5O_BxJ-7uvJFww50LCW2p_v_l1-L
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         System.out.println("SecurityConfig Boris");
