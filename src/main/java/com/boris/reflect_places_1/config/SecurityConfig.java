@@ -3,10 +3,12 @@ package com.boris.reflect_places_1.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -27,12 +29,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors()
-                .and()
+                .cors().and()
                 .csrf().disable()
-                .addFilterBefore(new TokenLoggingFilter(), org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new TokenLoggingFilter(issuer), BearerTokenAuthenticationFilter.class) // ✅ Ensure logging runs before token verification
                 .authorizeHttpRequests()
-                .requestMatchers("/api/places").hasAuthority("SCOPE_write:places")  // 🔥 FIX: Require correct scope
+                .requestMatchers(HttpMethod.GET, "/api/places").hasAuthority("SCOPE_read:places")
+                .requestMatchers(HttpMethod.POST, "/api/places").hasAuthority("SCOPE_write:places")
                 .anyRequest().authenticated()
                 .and()
                 .oauth2ResourceServer()
@@ -45,27 +47,16 @@ public class SecurityConfig {
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        grantedAuthoritiesConverter.setAuthorityPrefix("SCOPE_");  // 🔥 Ensure scopes are prefixed correctly
+        grantedAuthoritiesConverter.setAuthorityPrefix("SCOPE_");
         grantedAuthoritiesConverter.setAuthoritiesClaimName("scope");
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
-
         return jwtAuthenticationConverter;
     }
-
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("https://www.brooks-dusura.uk"));
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
-    }
 }
+
+
 
 
 
