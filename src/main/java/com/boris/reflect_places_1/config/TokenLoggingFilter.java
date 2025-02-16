@@ -25,15 +25,18 @@ public class TokenLoggingFilter extends OncePerRequestFilter {
             String token = authHeader.substring(7);
             try {
                 SignedJWT signedJWT = SignedJWT.parse(token);
-                logger.debug("Received JWT Token (first 20 chars): {}", token.substring(0, Math.min(20, token.length())));
-                logger.debug("Token Payload: {}", signedJWT.getPayload().toString());
+
+                logger.debug("🔑 Received JWT Token (first 20 chars): {}", token.substring(0, Math.min(20, token.length())));
+                logger.debug("🔍 Token Payload: {}", signedJWT.getPayload().toString());
+
             } catch (ParseException e) {
-                logger.error("Failed to parse JWT", e);
+                logger.error("🚨 Failed to parse JWT", e);
             }
         }
         filterChain.doFilter(request, response);
     }
 }
+
 
 
 //package com.boris.reflect_places_1.config;
