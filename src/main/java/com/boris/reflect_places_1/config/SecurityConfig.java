@@ -2,7 +2,7 @@
 //
 //
 //
-package com.boris.reflect_places_1.config;
+
 //
 //import org.springframework.beans.factory.annotation.Value;
 //import org.springframework.context.annotation.Bean;
@@ -69,43 +69,45 @@ package com.boris.reflect_places_1.config;
 //    }
 //}
 
+package com.boris.reflect_places_1.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final JwtDecoder jwtDecoder;
+    private static final String JWKS_URI = "https://dev-4zduxht0r6gq1f7f.us.auth0.com/.well-known/jwks.json";
 
-    public SecurityConfig(JwtDecoder jwtDecoder) {
-        this.jwtDecoder = jwtDecoder;
+    @Bean
+    public JwtDecoder jwtDecoder() {
+        return NimbusJwtDecoder.withJwkSetUri(JWKS_URI).build();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors().and()
-                .csrf().disable()
-                .addFilterBefore(new TokenLoggingFilter(jwtDecoder), UsernamePasswordAuthenticationFilter.class)  // 🔥 Ensure logging filter runs before authentication
-                .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.GET, "/api/places").hasAuthority("read:places")
-                .requestMatchers(HttpMethod.POST, "/api/places").hasAuthority("write:places")
-                .anyRequest().authenticated()
-                .and()
-                .oauth2ResourceServer()
-                .jwt()
-                .jwtAuthenticationConverter(jwtAuthenticationConverter());
+                .cors(cors -> cors.configure(http)) // ✅ Correct CORS Configuration
+                .csrf(csrf -> csrf.disable()) // ✅ Correct CSRF Configuration
+                .addFilterBefore(new TokenLoggingFilter(jwtDecoder()), UsernamePasswordAuthenticationFilter.class) // ✅ Ensure Logging Filter is Before Authentication
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.GET, "/api/places").hasAuthority("SCOPE_read:places") // ✅ Ensure Prefix Matches Token
+                        .requestMatchers(HttpMethod.POST, "/api/places").hasAuthority("SCOPE_write:places")
+                        .anyRequest().authenticated()
+                )
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                );
 
         return http.build();
     }
@@ -114,16 +116,10 @@ public class SecurityConfig {
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
         grantedAuthoritiesConverter.setAuthoritiesClaimName("scope");
-        grantedAuthoritiesConverter.setAuthorityPrefix("");
+        grantedAuthoritiesConverter.setAuthorityPrefix("SCOPE_"); // ✅ Fix Scope Prefix Issue
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
         return jwtAuthenticationConverter;
     }
-
-    @Bean
-    public JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withJwkSetUri("https://dev-4zduxht0r6gq1f7f.us.auth0.com/.well-known/jwks.json").build();
-    }
 }
-
