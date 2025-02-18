@@ -70,7 +70,6 @@ package com.boris.reflect_places_1.config;
 //}
 
 
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -79,21 +78,26 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcherEntry;
-import org.springframework.security.web.util.matcher.RequestMatchers;
-import org.springframework.security.web.util.matcher.RegexRequestMatcher;
-import java.util.List;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final JwtDecoder jwtDecoder;
+
+    public SecurityConfig(JwtDecoder jwtDecoder) {
+        this.jwtDecoder = jwtDecoder;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .cors().and()
                 .csrf().disable()
+                .addFilterBefore(new TokenLoggingFilter(jwtDecoder), UsernamePasswordAuthenticationFilter.class)  // 🔥 Ensure logging filter runs before authentication
                 .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.GET, "/api/places").hasAuthority("read:places")
                 .requestMatchers(HttpMethod.POST, "/api/places").hasAuthority("write:places")
@@ -102,17 +106,6 @@ public class SecurityConfig {
                 .oauth2ResourceServer()
                 .jwt()
                 .jwtAuthenticationConverter(jwtAuthenticationConverter());
-
-        // ✅ Add detailed logging
-        http.exceptionHandling()
-                .authenticationEntryPoint((request, response, authException) -> {
-                    System.out.println("🚨 Authentication Error: " + authException.getMessage());
-                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized request");
-                })
-                .accessDeniedHandler((request, response, accessDeniedException) -> {
-                    System.out.println("⛔ Access Denied: " + accessDeniedException.getMessage());
-                    response.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden request");
-                });
 
         return http.build();
     }
@@ -127,4 +120,10 @@ public class SecurityConfig {
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
         return jwtAuthenticationConverter;
     }
+
+    @Bean
+    public JwtDecoder jwtDecoder() {
+        return NimbusJwtDecoder.withJwkSetUri("https://dev-4zduxht0r6gq1f7f.us.auth0.com/.well-known/jwks.json").build();
+    }
 }
+
