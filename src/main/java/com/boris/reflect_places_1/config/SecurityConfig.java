@@ -1,20 +1,21 @@
-//package com.boris.reflect_places_1.config;
+//
+//
+//
+//
+package com.boris.reflect_places_1.config;
 //
 //import org.springframework.beans.factory.annotation.Value;
 //import org.springframework.context.annotation.Bean;
 //import org.springframework.context.annotation.Configuration;
-//import org.springframework.http.HttpMethod;
 //import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 //import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 //import org.springframework.security.oauth2.jwt.JwtDecoder;
-//import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
-//import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-//import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
-//import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
+//import org.springframework.security.oauth2.jwt.JwtDecoders;
 //import org.springframework.security.web.SecurityFilterChain;
 //import org.springframework.web.cors.CorsConfiguration;
 //import org.springframework.web.cors.CorsConfigurationSource;
 //import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+//
 //
 //import java.util.Arrays;
 //
@@ -28,110 +29,102 @@
 //    @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
 //    private String issuer;
 //
-//    @Bean
-//    JwtDecoder jwtDecoder() {
-//        return NimbusJwtDecoder.withJwkSetUri(issuer + ".well-known/jwks.json")
-//                .build();
-//    }
+//    //kmpoYNCF5SmOh7bMkO0xYkCBTlO25sNu
+//    //5yvJg7M1DRDtbL51OSYg1MraygSEfyQYCDqe5O_BxJ-7uvJFww50LCW2p_v_l1-L
 //
 //    @Bean
 //    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        System.out.println("SecurityConfig Boris");
+//        System.out.println("audience: " + audience);
+//        System.out.println("issuer: " + issuer);
+//
 //        http
-//                .cors().and()
+//                .cors()
+//                .and()
 //                .csrf().disable()
-//                .addFilterBefore(new TokenLoggingFilter(issuer), BearerTokenAuthenticationFilter.class) // ✅ Ensure logging runs before token verification
+//                .addFilterBefore(new TokenLoggingFilter(), org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)
 //                .authorizeHttpRequests()
-//                .requestMatchers(HttpMethod.GET, "/api/places").hasAuthority("SCOPE_read:places")
-//                .requestMatchers(HttpMethod.POST, "/api/places").hasAuthority("SCOPE_write:places")
-//                .anyRequest().authenticated()
+//                .requestMatchers("/api/**").authenticated()
 //                .and()
 //                .oauth2ResourceServer()
-//                .jwt()
-//                .jwtAuthenticationConverter(jwtAuthenticationConverter());
-//
+//                .jwt();
 //        return http.build();
 //    }
 //
 //    @Bean
-//    public JwtAuthenticationConverter jwtAuthenticationConverter() {
-//        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-//        grantedAuthoritiesConverter.setAuthorityPrefix("SCOPE_");
-//        grantedAuthoritiesConverter.setAuthoritiesClaimName("scope");
+//    JwtDecoder jwtDecoder() {
+//        return JwtDecoders.fromIssuerLocation(issuer);
+//    }
 //
-//        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-//        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
-//        return jwtAuthenticationConverter;
+//    @Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration config = new CorsConfiguration();
+//        config.setAllowedOrigins(Arrays.asList("www.brooks-dusura.uk")); // Add your frontend URL
+//        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+//        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+//
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", config);
+//        return source;
 //    }
 //}
-//
-//
 
 
-
-package com.boris.reflect_places_1.config;
-
-
-import org.springframework.beans.factory.annotation.Value;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtDecoders;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-
-import java.util.Arrays;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcherEntry;
+import org.springframework.security.web.util.matcher.RequestMatchers;
+import org.springframework.security.web.util.matcher.RegexRequestMatcher;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Value("${auth0.audience}")
-    private String audience;
-
-    @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
-    private String issuer;
-
-    //kmpoYNCF5SmOh7bMkO0xYkCBTlO25sNu
-    //5yvJg7M1DRDtbL51OSYg1MraygSEfyQYCDqe5O_BxJ-7uvJFww50LCW2p_v_l1-L
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        System.out.println("SecurityConfig Boris");
-        System.out.println("audience: " + audience);
-        System.out.println("issuer: " + issuer);
-
         http
-                .cors()
-                .and()
+                .cors().and()
                 .csrf().disable()
-                .addFilterBefore(new TokenLoggingFilter(), org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests()
-                .requestMatchers("/api/**").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/places").hasAuthority("read:places")
+                .requestMatchers(HttpMethod.POST, "/api/places").hasAuthority("write:places")
+                .anyRequest().authenticated()
                 .and()
                 .oauth2ResourceServer()
-                .jwt();
+                .jwt()
+                .jwtAuthenticationConverter(jwtAuthenticationConverter());
+
+        // ✅ Add detailed logging
+        http.exceptionHandling()
+                .authenticationEntryPoint((request, response, authException) -> {
+                    System.out.println("🚨 Authentication Error: " + authException.getMessage());
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized request");
+                })
+                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                    System.out.println("⛔ Access Denied: " + accessDeniedException.getMessage());
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden request");
+                });
+
         return http.build();
     }
 
     @Bean
-    JwtDecoder jwtDecoder() {
-        return JwtDecoders.fromIssuerLocation(issuer);
-    }
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        grantedAuthoritiesConverter.setAuthoritiesClaimName("scope");
+        grantedAuthoritiesConverter.setAuthorityPrefix("");
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("www.brooks-dusura.uk")); // Add your frontend URL
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
+        return jwtAuthenticationConverter;
     }
 }
