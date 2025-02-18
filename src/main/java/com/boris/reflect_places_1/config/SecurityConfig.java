@@ -145,18 +145,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.oauth2.jwt.*;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
-import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.security.oauth2.server.resource.authentication.JwtClaimValidator;
-import org.springframework.security.oauth2.server.resource.authentication.OAuth2TokenValidator;
-import org.springframework.security.oauth2.server.resource.authentication.DelegatingOAuth2TokenValidator;
-import org.springframework.security.oauth2.server.resource.authentication.JwtValidators;
 
 import java.util.Arrays;
 import java.util.List;
@@ -176,10 +172,9 @@ public class SecurityConfig {
         http
                 .cors().and()
                 .csrf().disable()
-                .addFilterBefore(new TokenLoggingFilter(issuer), BearerTokenAuthenticationFilter.class)
                 .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.GET, "/api/places").hasAuthority("read:places") // 🔥 Fix scope naming
-                .requestMatchers(HttpMethod.POST, "/api/places").hasAuthority("write:places") // 🔥 Fix scope naming
+                .requestMatchers(HttpMethod.GET, "/api/places").hasAuthority("read:places") // ✅ Fixed scopes
+                .requestMatchers(HttpMethod.POST, "/api/places").hasAuthority("write:places") // ✅ Fixed scopes
                 .anyRequest().authenticated()
                 .and()
                 .oauth2ResourceServer()
@@ -192,8 +187,8 @@ public class SecurityConfig {
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        grantedAuthoritiesConverter.setAuthoritiesClaimName("scope"); // 🔥 Supports "scope" claims
-        grantedAuthoritiesConverter.setAuthorityPrefix(""); // 🔥 Removes "SCOPE_" prefix
+        grantedAuthoritiesConverter.setAuthoritiesClaimName("scope"); // ✅ Ensure correct claim
+        grantedAuthoritiesConverter.setAuthorityPrefix(""); // ✅ Remove SCOPE_ prefix
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
@@ -202,14 +197,6 @@ public class SecurityConfig {
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        NimbusJwtDecoder decoder = NimbusJwtDecoder.withJwkSetUri(issuer + ".well-known/jwks.json").build();
-
-        // 🔥 Explicit audience validation
-        OAuth2TokenValidator<Jwt> withAudience = new JwtClaimValidator<List<String>>("aud", aud -> aud.contains(audience));
-        OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(issuer);
-        OAuth2TokenValidator<Jwt> validator = new DelegatingOAuth2TokenValidator<>(withIssuer, withAudience);
-        decoder.setJwtValidator(validator);
-
-        return decoder;
+        return NimbusJwtDecoder.withJwkSetUri(issuer + ".well-known/jwks.json").build();
     }
 }
