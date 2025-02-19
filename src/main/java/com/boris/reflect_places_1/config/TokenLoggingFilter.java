@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class TokenLoggingFilter extends OncePerRequestFilter {
     private static final Logger logger = LoggerFactory.getLogger(TokenLoggingFilter.class);
@@ -31,7 +32,7 @@ public class TokenLoggingFilter extends OncePerRequestFilter {
             try {
                 Jwt jwt = jwtDecoder.decode(token);
                 logger.info("✅ Valid Token Received: {}", jwt.getClaims());
-                logger.info(jwt.getClaims().containsValue("https://www.brooks-dusura.uk/api") + "True Boris");
+                logger.info("👤 Boris Scope: {}", Optional.ofNullable(jwt.getClaim("scope")));
             } catch (Exception e) {
                 logger.error("🚨 Invalid Token: {}", e.getMessage());
             }
