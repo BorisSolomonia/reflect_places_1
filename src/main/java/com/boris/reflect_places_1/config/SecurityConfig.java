@@ -42,8 +42,7 @@ public class SecurityConfig {
                 // Add our custom logging filter to log token details
                 .addFilterBefore(new TokenLoggingFilter(jwtDecoder), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET, "/api/places").hasAuthority("read:places")
-                        .requestMatchers(HttpMethod.POST, "/api/places").hasAuthority("write:places")
+                        .requestMatchers(HttpMethod.POST, "/api/places").hasAuthority("openid write:places")
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
