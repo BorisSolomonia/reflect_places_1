@@ -41,7 +41,12 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 // Add our custom logging filter to log token details
                 .addFilterBefore(new TokenLoggingFilter(jwtDecoder), UsernamePasswordAuthenticationFilter.class)
+                // ...
+                .addFilterAfter(new LoggingAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+// ...
+
                 .authorizeHttpRequests(auth -> auth
+
                         .requestMatchers(HttpMethod.POST, "/api/places").hasAuthority("openid write:places")
                         .anyRequest().authenticated()
                 )
