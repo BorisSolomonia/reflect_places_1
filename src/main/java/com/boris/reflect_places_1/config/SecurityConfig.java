@@ -116,7 +116,6 @@ public class SecurityConfig {
                 // Register our logging filter BEFORE authentication
                 .addFilterBefore(new TokenLoggingFilter(jwtDecoder), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET, "/api/places").hasAuthority("SCOPE_read:places")
                         .requestMatchers(HttpMethod.POST, "/api/places").hasAuthority("SCOPE_write:places")
                         .anyRequest().authenticated()
                 )
