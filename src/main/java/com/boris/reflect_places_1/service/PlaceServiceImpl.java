@@ -26,6 +26,8 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public PlaceEntity save(PlaceEntity place) {
+        System.out.print("Boris Zdarova");
+        System.out.println(place.getName());
         return placeRepository.save(place);
     }
 
