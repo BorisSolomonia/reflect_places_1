@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .addFilterBefore(new TokenLoggingFilter(jwtDecoder), UsernamePasswordAuthenticationFilter.class)
 
                 .authorizeHttpRequests(auth -> auth
-
+            // აქ უნდა ვცადო სხვა რამის ჩაწერა მაგალითად write:ყლე და ა.შ.
                         .requestMatchers(HttpMethod.POST, "/api/places").hasAuthority("write:places")
                         .anyRequest().authenticated()
                 )
