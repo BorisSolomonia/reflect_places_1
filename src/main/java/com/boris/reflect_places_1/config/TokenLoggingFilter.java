@@ -31,6 +31,9 @@ public class TokenLoggingFilter extends OncePerRequestFilter {
             try {
                 Jwt jwt = jwtDecoder.decode(token);
                 logger.info("✅ Valid Token Received: {}", jwt.getClaims());
+                logger.info(jwt.getClaims().get("name").toString());
+                logger.info(jwt.getClaims().get("scope").toString());
+                logger.info(jwt.getClaims().containsValue("write:places") + "True Boris");
             } catch (Exception e) {
                 logger.error("🚨 Invalid Token: {}", e.getMessage());
             }
