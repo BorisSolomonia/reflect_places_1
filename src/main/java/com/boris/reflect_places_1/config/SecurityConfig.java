@@ -48,9 +48,8 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                                 .requestMatchers(HttpMethod.POST, "/api/places").hasAuthority("e write:places")
                 )
-//                .oauth2ResourceServer(oauth2 -> oauth2
-//                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
-//                )
+                .oauth2ResourceServer(oauth2 -> oauth2
+                       .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((req, res, authEx) -> {
                             System.err.println("🚨 Authentication failure: " + authEx.getMessage());
