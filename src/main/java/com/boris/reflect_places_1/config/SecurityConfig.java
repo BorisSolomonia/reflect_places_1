@@ -46,6 +46,7 @@ public class SecurityConfig {
 
 //                        .requestMatchers(HttpMethod.POST, "/api/places").hasAuthority("write:places")
                         .anyRequest().authenticated()
+                                .requestMatchers(HttpMethod.POST, "/api/places").hasAuthority("e write:places")
                 )
 //                .oauth2ResourceServer(oauth2 -> oauth2
 //                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
