@@ -49,8 +49,8 @@ public class SecurityConfig {
                         )
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/api/places").authenticated()
-                        //.hasAuthority("write:places")
+                        .requestMatchers(HttpMethod.POST, "/api/places")
+                        .hasAuthority("write:places")
                         .anyRequest().authenticated()
                 //)
                 //.exceptionHandling(ex -> ex
