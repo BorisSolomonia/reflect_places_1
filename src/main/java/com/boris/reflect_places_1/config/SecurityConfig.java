@@ -39,18 +39,20 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
-                // Add our custom logging filter to log token details
+                // Add custom logging filter before authentication
                 .addFilterBefore(new TokenLoggingFilter(jwtDecoder), UsernamePasswordAuthenticationFilter.class)
-
+                // Configure OAuth2 Resource Server with JWT
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt
+                                .decoder(jwtDecoder) // Explicitly set the decoder
+                                .jwtAuthenticationConverter(jwtAuthenticationConverter())
+                        )
+                )
                 .authorizeHttpRequests(auth -> auth
-            // აქ უნდა ვცადო სხვა რამის ჩაწერა მაგალითად write:ყლე და ა.შ.
                         .requestMatchers(HttpMethod.POST, "/api/places").authenticated()
-                                //.hasAuthority("write:places")
+                        //.hasAuthority("write:places")
                         .anyRequest().authenticated()
                 )
-//                .oauth2ResourceServer(oauth2 -> oauth2
-//                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
-//                )
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((req, res, authEx) -> {
                             System.err.println("🚨 Authentication failure: " + authEx.getMessage());
@@ -65,9 +67,8 @@ public class SecurityConfig {
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        // Set the claim name to "scope" and remove any prefix
-        grantedAuthoritiesConverter.setAuthoritiesClaimName("scope");
-        grantedAuthoritiesConverter.setAuthorityPrefix(""); // <-- No prefix
+        grantedAuthoritiesConverter.setAuthoritiesClaimName("scope"); // Extract from "scope"
+        grantedAuthoritiesConverter.setAuthorityPrefix(""); // No prefix for scopes like "write:places"
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
@@ -77,7 +78,6 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        // Use the full origin URL including protocol
         config.setAllowedOrigins(Arrays.asList("https://www.brooks-dusura.uk"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
