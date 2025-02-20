@@ -33,18 +33,19 @@ public class PlaceController {
     public ResponseEntity<PlaceEntity> createPlace(@RequestBody PlaceEntity place,
                                                    @AuthenticationPrincipal Jwt jwt) {
         // Extract username from JWT
-        String username = jwt.getClaim("nickname"); // Try "email" if nickname is missing
-        if (username == null) {
-            username = jwt.getClaim("email");
-        }
+//        String username = jwt.getClaim("nickname"); // Try "email" if nickname is missing
+//        if (username == null) {
+//            username = jwt.getClaim("email");
+//        }
+//
+//        if (username == null) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//        }
+//
+//        place.setUsername(username); // Set username automatically
+//        place.setCreatedAt(LocalDateTime.now()); // Set created_at automatically
 
-        if (username == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        place.setUsername(username); // Set username automatically
-        place.setCreatedAt(LocalDateTime.now()); // Set created_at automatically
-
+        System.out.println("Boris Controller Zdarova");
         PlaceEntity savedPlace = placeService.save(place);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPlace);
     }

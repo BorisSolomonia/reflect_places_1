@@ -52,13 +52,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/places").authenticated()
                         //.hasAuthority("write:places")
                         .anyRequest().authenticated()
-                )
-                .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint((req, res, authEx) -> {
-                            System.err.println("🚨 Authentication failure: " + authEx.getMessage());
-                            authEx.printStackTrace();
-                            res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-                        })
+                //)
+                //.exceptionHandling(ex -> ex
+//                        .authenticationEntryPoint((req, res, authEx) -> {
+//                            System.err.println("🚨 Authentication failure: " + authEx.getMessage());
+//                            authEx.printStackTrace();
+//                            res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+//                        })
                 );
 
         return http.build();
@@ -67,9 +67,8 @@ public class SecurityConfig {
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        grantedAuthoritiesConverter.setAuthoritiesClaimName("scope"); // Extract from "scope"
-        grantedAuthoritiesConverter.setAuthorityPrefix(""); // No prefix for scopes like "write:places"
-
+        grantedAuthoritiesConverter.setAuthoritiesClaimName("scope");
+        grantedAuthoritiesConverter.setAuthorityPrefix("");
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
         return jwtAuthenticationConverter;
