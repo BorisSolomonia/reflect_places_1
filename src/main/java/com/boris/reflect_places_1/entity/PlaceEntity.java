@@ -26,6 +26,10 @@ public class PlaceEntity implements Place{
 
     // Getters and Setters
 
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
     public PlaceEntity(String name, double lat, double lng, String username) {
         this.name = name;
         this.latitude = lat;

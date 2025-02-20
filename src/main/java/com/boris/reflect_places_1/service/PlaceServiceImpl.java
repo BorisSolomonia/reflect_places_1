@@ -3,6 +3,8 @@ package com.boris.reflect_places_1.service;
 import com.boris.reflect_places_1.entity.Place;
 import com.boris.reflect_places_1.entity.PlaceEntity;
 import com.boris.reflect_places_1.repo.PlaceRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -12,6 +14,8 @@ import java.util.List;
 
 @Service
 public class PlaceServiceImpl implements PlaceService {
+
+    private static final Logger logger = LoggerFactory.getLogger(PlaceServiceImpl.class);
 
     @Autowired
     private PlaceRepository placeRepository;
@@ -26,8 +30,9 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public PlaceEntity save(PlaceEntity place) {
-        System.out.print("Boris Zdarova");
+        logger.info("🎉 Received request to create place: {}", place);
         System.out.println(place.getName());
+        logger.info("💾 Saved place: {}", place);
         return placeRepository.save(place);
     }
 
