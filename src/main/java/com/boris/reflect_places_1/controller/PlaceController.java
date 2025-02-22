@@ -2,11 +2,8 @@ package com.boris.reflect_places_1.controller;
 
 import com.boris.reflect_places_1.entity.PlaceEntity;
 import com.boris.reflect_places_1.repo.PlaceRepository;
-import com.boris.reflect_places_1.service.PlaceService;
+import com.boris.reflect_places_1.service.PlaceServiceinterface;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +19,7 @@ public class PlaceController {
     private PlaceRepository placeRepository;
 
     @Autowired
-    private PlaceService placeService;
+    private PlaceServiceinterface placeService;
 
     @PostMapping("/places")
     public PlaceEntity savePlace(@RequestBody PlaceEntity place, @AuthenticationPrincipal Jwt jwt) {
@@ -41,5 +38,6 @@ public class PlaceController {
     public String demo() {
         return "Hello World!";
     }
+
 
 }

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class PlaceServiceImpl implements PlaceService {
+public class PlaceServiceImpl implements PlaceServiceinterface {
 
     @Autowired
     private PlaceRepository placeRepository;
