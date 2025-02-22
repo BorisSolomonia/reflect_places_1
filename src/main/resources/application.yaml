@@ -37,3 +37,5 @@ logging:
         reflect_places_1:
           config: debug
           security: debug
+file:
+  upload-dir: /home/boris/Downloads/reflect_places_1
